@@ -157,13 +157,6 @@ Environment: Tested on Python 3.8-3.12 across OSes. No internet beyond API neede
 - **Scalability Tests**: Handles 50+ tickers; bottlenecks: API calls (parallelize future), XGBoost training (batch if needed).
 - **Benchmarks**: On sample data (AAPL/MSFT/GOOGL, 2020-2022): VaR ~-5\%, Sharpe ~1.2; back-test p>0.05 indicating good fit. FMM vs MST: FMM faster for small n, MST better for correlations.
 
-## Testing and Validation
-
-- **Unit Tests**: Suggested framework: pytest for individual functions (e.g., test KS on normal data returns 'normal').
-- **Integration Tests**: Full pipeline with mock data; assert weights sum=1, p-values reasonable.
-- **Edge Cases Tested**: Empty tickers (error), future dates (API fail), singular cov matrix (fallback equal weights).
-- **Validation Metrics**: Kupiec p-value for VaR; MSE for predictions vs actual; simulation convergence checked via path count.
-- **Manual Testing**: GUI interactions, notebook reruns; cross-OS verification.
 
 ## Limitations and Known Issues
 
@@ -178,10 +171,12 @@ Mitigations: Use premium API for production; extend with local data sources.
 
 ## Future Extensions and Roadmap
 
-- **Short-Term (Next Release)**: Add persistent caching (pickle/CSV for global\_data), results export (CSV/PDF), more validation tests (e.g., Christoffersen).
-- **Medium-Term**: Integrate additional data sources (Yahoo Finance fallback), support multi-asset classes (bonds, crypto via new APIs), dynamic VaR with GARCH.
-- **Long-Term**: Web-based deployment (Streamlit/Dash for online access), real-time streaming data, AI enhancements (e.g., LLM for report generation).
-- **Community-Driven**: Open to PRs for new visualizations (Plotly interactive), distributions (lognormal), or integrations (Backtrader for trading sims).
+ Disk caching (pickle).
+- More tests (e.g., Christoffersen for independence).
+- ML enhancements (e.g., LSTM for time-series).
+- Web app (Flask/Dash).
+- Multi-asset classes (bonds, crypto).
+- Integration with a investment trading algorithm with trading platform API integration for buy/sell.
 
 *Disclaimer**: This project is for educational and research purposes only. Financial markets involve substantial risk, and past performance does not guarantee future results. The tool's outputs are estimates based on historical data and models, which may not account for all variables (e.g., geopolitical events). Do not use for actual investment decisions without professional advice. No warranties are provided regarding accuracy, completeness, or fitness for purpose. Use at your own risk.
 
