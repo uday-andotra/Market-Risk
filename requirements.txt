@@ -1,0 +1,11 @@
+requests
+networkx
+numpy
+pandas
+scikit-learn
+matplotlib
+seaborn
+scipy
+xgboost
+tkcalendar
+python-dotenv
