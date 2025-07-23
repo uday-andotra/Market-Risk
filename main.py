@@ -12,69 +12,6 @@ from config import global_data, popular_etf, sp100_tickers, model_params
 import re
 import pandas as pd  # Added for pd.to_datetime
 
-# Create the GUI window
-root = tk.Tk()
-root.title("Market Risk Estimation")
-
-# Input frame to keep button visible
-input_frame = tk.Frame(root)
-input_frame.pack(side=tk.TOP, fill=tk.X)
-
-# Frame for stock selection
-tk.Label(input_frame, text="Select Stocks:").pack()
-stock_frame = tk.Frame(input_frame)
-stock_frame.pack()
-stock_listbox = tk.Listbox(stock_frame, selectmode='multiple', width=50, height=10)
-for ticker in sp100_tickers:
-    stock_listbox.insert(tk.END, ticker)
-stock_listbox.pack(side=tk.LEFT)
-scrollbar = tk.Scrollbar(stock_frame, orient=tk.VERTICAL)
-scrollbar.config(command=stock_listbox.yview)
-stock_listbox.config(yscrollcommand=scrollbar.set)
-scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-
-# Date selection with calendar widgets
-tk.Label(input_frame, text="Hist Start Date:").pack()
-start_date_entry = DateEntry(input_frame, width=47, date_pattern='yyyy-mm-dd')
-start_date_entry.pack()
-start_date_entry.set_date(datetime(2020, 1, 1))
-
-tk.Label(input_frame, text="Hist End Date:").pack()
-end_date_entry = DateEntry(input_frame, width=47, date_pattern='yyyy-mm-dd')
-end_date_entry.pack()
-end_date_entry.set_date(datetime(2021, 12, 31))
-
-tk.Label(input_frame, text="Forecast Start:").pack()
-forecast_start_entry = DateEntry(input_frame, width=47, date_pattern='yyyy-mm-dd')
-forecast_start_entry.pack()
-forecast_start_entry.set_date(datetime(2022, 1, 1))
-
-tk.Label(input_frame, text="Forecast End:").pack()
-forecast_end_entry = DateEntry(input_frame, width=47, date_pattern='yyyy-mm-dd')
-forecast_end_entry.pack()
-forecast_end_entry.set_date(datetime(2022, 12, 31))
-
-tk.Label(input_frame, text="Risk-Free Rate (%):").pack()
-risk_free_entry = tk.Entry(input_frame, width=50)
-risk_free_entry.pack()
-risk_free_entry.insert(0, "1.0")
-
-tk.Label(input_frame, text="Method:").pack()
-method_var = tk.StringVar(value="MST + XGBoost")
-ttk.Radiobutton(input_frame, text="MST + XGBoost", variable=method_var, value="MST + XGBoost").pack()
-ttk.Radiobutton(input_frame, text="FMM", variable=method_var, value="FMM").pack()
-
-# Button to run analysis (in input_frame to keep visible)
-analyze_button = tk.Button(input_frame, text="Load and Analyze", command=load_and_analyze)
-analyze_button.pack()
-
-output_text = tk.Text(root, height=20, width=80, state='disabled')
-output_text.pack(fill=tk.BOTH, expand=True)
-
-# Canvas for embedding plots
-plot_frame = tk.Frame(root)
-plot_frame.pack(fill=tk.BOTH, expand=True)
-
 def validate_inputs(tickers, start_date, end_date, forecast_start, forecast_end, risk_free_rate):
     """Validate user inputs."""
     if not tickers:
@@ -351,6 +288,70 @@ def load_and_analyze():
                 output_text.insert(tk.END, 'Model fails Kupiec test (violations do not match expected rate).\n')
     except Exception as e:
         output_text.insert(tk.END, f"Error: {str(e)}\n")
+
+# Create the GUI window
+root = tk.Tk()
+root.title("Market Risk Estimation")
+
+# Input frame to keep button visible
+input_frame = tk.Frame(root)
+input_frame.pack(side=tk.TOP, fill=tk.X)
+
+# Frame for stock selection
+tk.Label(input_frame, text="Select Stocks:").pack()
+stock_frame = tk.Frame(input_frame)
+stock_frame.pack()
+stock_listbox = tk.Listbox(stock_frame, selectmode='multiple', width=50, height=10)
+for ticker in sp100_tickers:
+    stock_listbox.insert(tk.END, ticker)
+stock_listbox.pack(side=tk.LEFT)
+scrollbar = tk.Scrollbar(stock_frame, orient=tk.VERTICAL)
+scrollbar.config(command=stock_listbox.yview)
+stock_listbox.config(yscrollcommand=scrollbar.set)
+scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+# Date selection with calendar widgets
+tk.Label(input_frame, text="Hist Start Date:").pack()
+start_date_entry = DateEntry(input_frame, width=47, date_pattern='yyyy-mm-dd')
+start_date_entry.pack()
+start_date_entry.set_date(datetime(2020, 1, 1))
+
+tk.Label(input_frame, text="Hist End Date:").pack()
+end_date_entry = DateEntry(input_frame, width=47, date_pattern='yyyy-mm-dd')
+end_date_entry.pack()
+end_date_entry.set_date(datetime(2021, 12, 31))
+
+tk.Label(input_frame, text="Forecast Start:").pack()
+forecast_start_entry = DateEntry(input_frame, width=47, date_pattern='yyyy-mm-dd')
+forecast_start_entry.pack()
+forecast_start_entry.set_date(datetime(2022, 1, 1))
+
+tk.Label(input_frame, text="Forecast End:").pack()
+forecast_end_entry = DateEntry(input_frame, width=47, date_pattern='yyyy-mm-dd')
+forecast_end_entry.pack()
+forecast_end_entry.set_date(datetime(2022, 12, 31))
+
+tk.Label(input_frame, text="Risk-Free Rate (%):").pack()
+risk_free_entry = tk.Entry(input_frame, width=50)
+risk_free_entry.pack()
+risk_free_entry.insert(0, "1.0")
+
+tk.Label(input_frame, text="Method:").pack()
+method_var = tk.StringVar(value="MST + XGBoost")
+ttk.Radiobutton(input_frame, text="MST + XGBoost", variable=method_var, value="MST + XGBoost").pack()
+ttk.Radiobutton(input_frame, text="FMM", variable=method_var, value="FMM").pack()
+
+# Button to run analysis (in input_frame to keep visible)
+analyze_button = tk.Button(input_frame, text="Load and Analyze", command=load_and_analyze)
+analyze_button.pack()
+
+output_text = tk.Text(root, height=20, width=80, state='disabled')
+output_text.pack(fill=tk.BOTH, expand=True)
+
+# Canvas for embedding plots
+plot_frame = tk.Frame(root)
+plot_frame.pack(fill=tk.BOTH, expand=True)
+
 
 # Start the Tkinter event loop
 root.mainloop()
